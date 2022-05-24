@@ -37,4 +37,8 @@ export class UserService {
   async update(id: number, body: UpdateBody) {
     await this.userRepo.save({ id, ...body });
   }
+
+  async find() {
+    return this.userRepo.find({ is_ambassador: true });
+  }
 }
