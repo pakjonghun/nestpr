@@ -42,4 +42,10 @@ export class AuthController {
     const jwt = req.cookies['jwt'];
     return this.authService.user(jwt);
   }
+
+  @Post('admin/logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('jwt');
+    return { message: 'success' };
+  }
 }
