@@ -15,7 +15,7 @@ export class UserService extends AbstractService {
   async findUserWithPassword(options) {
     return this.userRepository.findOne(
       { ...options },
-      { select: ['id', 'password'] },
+      { select: ['id', 'password', 'is_ambassador'] },
     );
   }
 }

@@ -29,6 +29,7 @@ export class AuthController {
 
   @Post(['admin/register', 'ambassador/register'])
   async register(@Req() req: Request, @Body() body: RegisterDto) {
+    console.log(req.path);
     const isAmbissador = req.path === '/api/ambassador/register';
     const hashedPassword = await bcrypt.hashSync(body.password, 10);
     return this.userService.save({
@@ -41,9 +42,10 @@ export class AuthController {
   @Post(['admin/login', 'ambassador/login'])
   async login(
     @Res({ passthrough: true }) res: Response,
+    @Req() req: Request,
     @Body() body: LoginDto,
   ) {
-    const jwt = await this.authService.login(body);
+    const jwt = await this.authService.login(req.path, body);
     res.cookie('jwt', jwt, { httpOnly: true });
     return { message: 'success' };
   }
