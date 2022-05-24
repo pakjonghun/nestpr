@@ -6,11 +6,9 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  Req,
 } from '@nestjs/common';
 import { compareSync } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 
 @Injectable()
 export class AuthService {

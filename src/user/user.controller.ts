@@ -1,6 +1,5 @@
 import { UserService } from './user.service';
-import { Controller, Get, Req } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class UserController {

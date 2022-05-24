@@ -1,9 +1,7 @@
-import { PartialType } from '@nestjs/swagger';
-import { UpdateDto } from './../auth/dtos/update.dto';
 import { User } from './user';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { RegisterDto } from 'src/auth/dtos/register.dto';
+import { RegisterDto } from '../auth/dtos/register.dto';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { UpdateBody } from './dtos/update.dto';
@@ -22,7 +20,6 @@ export class UserService {
     return this.userRepo.save({
       ...body,
       password,
-      is_ambassador: false,
     });
   }
 
@@ -39,6 +36,8 @@ export class UserService {
   }
 
   async find() {
-    return this.userRepo.find({ is_ambassador: true });
+    const users = await this.userRepo.find({ is_ambassador: true });
+    console.log(users);
+    return users;
   }
 }
