@@ -19,6 +19,7 @@ export function IsEqualPassword(
         validate(value: any, args: ValidationArguments) {
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as any)[relatedPropertyName];
+          console.log(relatedValue, value);
           return value === relatedValue;
         },
       },

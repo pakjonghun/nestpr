@@ -1,7 +1,6 @@
-import { JwtSecretRequestType, JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Response } from 'express';
-import { Observable } from 'rxjs';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -9,8 +8,8 @@ export class AuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext) {
     try {
-      const request = context.switchToHttp().getRequest() as Response;
-      const jwt = request['jwt'];
+      const request = context.switchToHttp().getRequest() as Request;
+      const jwt = request.cookies['jwt'];
       return this.jwtService.verify(jwt);
     } catch (error) {
       return false;

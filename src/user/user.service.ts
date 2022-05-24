@@ -1,9 +1,12 @@
+import { PartialType } from '@nestjs/swagger';
+import { UpdateDto } from './../auth/dtos/update.dto';
 import { User } from './user';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { RegisterDto } from 'src/auth/dtos/register.dto';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { UpdateBody } from './dtos/update.dto';
 
 @Injectable()
 export class UserService {
@@ -29,5 +32,9 @@ export class UserService {
 
   async findById(id: number) {
     return this.userRepo.findOne({ id });
+  }
+
+  async update(id: number, body: UpdateBody) {
+    await this.userRepo.save({ id, ...body });
   }
 }

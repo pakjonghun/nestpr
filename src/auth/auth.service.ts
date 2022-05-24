@@ -1,3 +1,4 @@
+import { UpdateDto } from './dtos/update.dto';
 import { LoginDto } from './dtos/login.dto';
 import { UserService } from './../user/user.service';
 import {
@@ -5,9 +6,11 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  Req,
 } from '@nestjs/common';
 import { compareSync } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -34,5 +37,15 @@ export class AuthService {
     const user = await this.userService.findById(id['id']);
     if (!user) throw new ForbiddenException('인증실패');
     return user;
+  }
+
+  async update(id: number, body: UpdateDto) {
+    await this.userService.update(id, body);
+    return this.userService.findById(id);
+  }
+
+  async updatePassword(id: number, password: string) {
+    await this.userService.update(id, { password });
+    return this.userService.findById(id);
   }
 }
