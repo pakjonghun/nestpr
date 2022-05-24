@@ -32,14 +32,14 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Put('admin/order')
+  @Put('admin/order/:id')
   async update(@Param('id') id: number, @Body() body: UpdateOrderDto) {
     await this.orderService.update(id, { body });
     return this.orderService.findOne({ id });
   }
 
   @UseGuards(AuthGuard)
-  @Delete('admin/order')
+  @Delete('admin/order/:id')
   async delete(@Param('id') id: number) {
     await this.orderService.delete(id);
     return { message: 'success' };

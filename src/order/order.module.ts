@@ -5,10 +5,11 @@ import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
 import { Order } from './order';
 import { OrderItem } from './orderItem';
+import { OrderItemService } from './orderItem.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem]), ShareModule],
-  providers: [OrderService],
+  providers: [OrderService, OrderItemService],
   controllers: [OrderController],
 })
 export class OrderModule {}
