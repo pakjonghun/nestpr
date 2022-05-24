@@ -1,9 +1,11 @@
+import { Link } from 'src/link/link';
 import { OrderItem } from './orderItem';
 import { IsBoolean, IsEmpty, IsOptional, IsString } from 'class-validator';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -59,6 +61,13 @@ export class Order {
   @OneToMany(() => OrderItem, (item) => item.order)
   @JoinColumn({ name: 'order_id' })
   order_item: OrderItem[];
+
+  @ManyToOne(() => Link, (link) => link.orders)
+  @JoinColumn({
+    name: 'code',
+    referencedColumnName: 'code',
+  })
+  link: Link;
 
   @Expose()
   get name() {
