@@ -1,14 +1,8 @@
 import { IsNumber, IsString } from 'class-validator';
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Order } from './order';
 
-@Entity('order Item')
+@Entity('order_item')
 export class OrderItem {
   @PrimaryGeneratedColumn()
   id: number;
