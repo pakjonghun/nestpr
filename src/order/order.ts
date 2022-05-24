@@ -64,4 +64,9 @@ export class Order {
   get name() {
     return this.first_name + ' ' + this.last_name;
   }
+
+  @Expose()
+  get total() {
+    return this.order_item.reduce((acc, cur) => cur.price + acc, 0);
+  }
 }

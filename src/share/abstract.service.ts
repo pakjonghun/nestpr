@@ -13,7 +13,7 @@ export abstract class AbstractService {
     return this.repo.findOne(options);
   }
 
-  async find(options) {
+  async find(options = {}) {
     return this.repo.find(options);
   }
 

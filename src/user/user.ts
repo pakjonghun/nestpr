@@ -1,6 +1,13 @@
 import { Exclude } from 'class-transformer';
 import { IsBoolean, IsEmail, IsString, MinLength } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Link } from 'src/link/link';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -26,4 +33,7 @@ export class User {
   @Column({ default: false })
   @IsBoolean({ message: '관리자인지 아닌지 참 혹은 거짓 입니다.' })
   is_ambassador: boolean;
+
+  @OneToMany(() => Link, (link) => link.user)
+  link: Link[];
 }
