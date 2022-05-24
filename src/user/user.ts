@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { IsBoolean, IsEmail, IsString, MinLength } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -10,6 +11,7 @@ export class User {
   @IsEmail({}, { message: '이메일 형식을 지키세요.' })
   email: string;
 
+  @Exclude()
   @Column()
   @MinLength(3, { message: '비밀번호는 3자리 이상을 입력하세요' })
   password: string;

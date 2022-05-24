@@ -1,11 +1,21 @@
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { UserService } from './../user/user.service';
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(
     private readonly userService: UserService,
@@ -25,5 +35,11 @@ export class AuthController {
   @Post('admin/register')
   async register(@Body() body: RegisterDto) {
     return this.userService.save(body);
+  }
+
+  @Get('admin/user')
+  async user(@Req() req: Request) {
+    const jwt = req.cookies['jwt'];
+    return this.authService.user(jwt);
   }
 }

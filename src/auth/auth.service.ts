@@ -2,6 +2,7 @@ import { LoginDto } from './dtos/login.dto';
 import { UserService } from './../user/user.service';
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -25,7 +26,13 @@ export class AuthService {
 
     const token = await this.jwtService.signAsync({ id: user.id });
     return token;
+  }
 
+  async user(jwt: string) {
+    const id = await this.jwtService.verifyAsync(jwt);
+    if (!id['id']) throw new ForbiddenException('인증실패');
+    const user = await this.userService.findById(id['id']);
+    if (!user) throw new ForbiddenException('인증실패');
     return user;
   }
 }
