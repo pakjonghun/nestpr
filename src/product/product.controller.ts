@@ -1,5 +1,6 @@
+import { RegisterProductDto } from './dtos/product.register.dto';
 import { ProductService } from './product.service';
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
 @Controller()
 export class ProductController {
@@ -8,5 +9,11 @@ export class ProductController {
   @Get('admin/product')
   async all() {
     return this.productService.find({});
+  }
+
+  @Post('admin/product')
+  async register(@Body() body: RegisterProductDto) {
+    const product = await this.productService.save(body);
+    return this.productService.findOne({ id: product['id'] });
   }
 }
