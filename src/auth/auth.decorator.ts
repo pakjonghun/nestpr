@@ -4,19 +4,22 @@ import {
   ValidationOptions,
 } from 'class-validator';
 
-export function IsEqualPassword(property: string, options?: ValidationOptions) {
-  return function (object: any, propertyName: string) {
+export function IsEqualPassword(
+  property: string,
+  validationOptions?: ValidationOptions,
+) {
+  return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
-      name: 'IsEqualPassword',
-      target: object.constractor,
-      propertyName,
-      options,
+      name: 'isLongerThan',
+      target: object.constructor,
+      propertyName: propertyName,
       constraints: [property],
+      options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          const [related] = args.constraints;
-          const relatedValue = (args.object as any)[related];
-          return relatedValue === value;
+          const [relatedPropertyName] = args.constraints;
+          const relatedValue = (args.object as any)[relatedPropertyName];
+          return value === relatedValue;
         },
       },
     });
