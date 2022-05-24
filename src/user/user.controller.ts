@@ -3,10 +3,10 @@ import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class UserController {
-  constructor(private readonly userRepo: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get('ambassadors')
   async getAmbassadors() {
-    return this.userRepo.find();
+    this.userService.find({ is_ambassador: true });
   }
 }

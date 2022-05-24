@@ -18,32 +18,30 @@ export class AuthService {
   ) {}
 
   async login({ email, password }: LoginDto) {
-    const user = await this.userService.findByEmail(email);
+    const user = await this.userService.findUserWithPassword({ email });
     if (!user) throw new NotFoundException('이메일이 없습니다.');
 
     if (!(await compareSync(password, user.password))) {
       throw new BadRequestException('잘못된 요청입니다.');
     }
-
     const token = await this.jwtService.signAsync({ id: user.id });
     return token;
   }
 
-  async user(jwt: string) {
-    const id = await this.jwtService.verifyAsync(jwt);
-    if (!id['id']) throw new ForbiddenException('인증실패');
-    const user = await this.userService.findById(id['id']);
+  async user(id: number) {
+    const user = await this.userService.findOne({ id });
+    console.log(user);
     if (!user) throw new ForbiddenException('인증실패');
     return user;
   }
 
   async update(id: number, body: UpdateDto) {
     await this.userService.update(id, body);
-    return this.userService.findById(id);
+    return this.userService.findOne({ id });
   }
 
   async updatePassword(id: number, password: string) {
     await this.userService.update(id, { password });
-    return this.userService.findById(id);
+    return this.userService.findOne({ id });
   }
 }

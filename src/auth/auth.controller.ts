@@ -3,9 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { UserService } from './../user/user.service';
+import * as bcrypt from 'bcryptjs';
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Get,
   Post,
@@ -13,7 +13,6 @@ import {
   Req,
   Res,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
 import { Request, Response } from 'express';
@@ -30,7 +29,8 @@ export class AuthController {
 
   @Post('admin/register')
   async register(@Body() body: RegisterDto) {
-    return this.userService.save(body);
+    const hashedPassword = await bcrypt.hashSync(body.password, 10);
+    return this.userService.save({ ...body, password: hashedPassword });
   }
 
   @Post('admin/login')
@@ -47,7 +47,11 @@ export class AuthController {
   @Get('admin/user')
   async user(@Req() req: Request) {
     const jwt = req.cookies['jwt'];
-    return this.authService.user(jwt);
+    const a = await this.jwtService.verifyAsync(jwt);
+    console.log('a', a);
+    const { id } = await this.jwtService.verifyAsync(jwt);
+    console.log(id);
+    return this.authService.user(id);
   }
 
   @UseGuards(AuthGuard)
