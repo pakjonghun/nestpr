@@ -10,9 +10,9 @@ async function bootstrap() {
 
   for (let i = 0; i < 31; i++) {
     await product.save({
-      title: faker.name.jobTitle(),
-      desc: faker.name.jobDescriptor(),
-      image: faker.image.food(),
+      title: faker.lorem.word(),
+      desc: faker.lorem.paragraph(),
+      image: faker.image.imageUrl(300, 300, '', true), //이래야 매번 고유 랜덤 이미지 나옴
       price: Math.random() * 5000 - 1000,
     });
   }
