@@ -1,4 +1,4 @@
-import { Link } from 'src/link/link';
+import { User } from '../user/user';
 import { OrderItem } from './orderItem';
 import { IsBoolean, IsEmpty, IsOptional, IsString } from 'class-validator';
 import {
@@ -62,6 +62,11 @@ export class Order {
   @JoinColumn({ name: 'order_id' })
   order_item: OrderItem[];
 
+  @ManyToOne(() => User, (user) => user.order, {
+    createForeignKeyConstraints: false,
+  })
+  user: User;
+
   // @ManyToOne(() => Link, (link) => link.orders)
   // @JoinColumn({
   //   name: 'code',
@@ -77,5 +82,20 @@ export class Order {
   @Expose()
   get total() {
     return this.order_item.reduce((acc, cur) => cur.price + acc, 0);
+  }
+
+  @Expose()
+  get revenue() {
+    const isAdmin = !this.user.is_ambassador;
+    console.log('order', this.user);
+    const isCompleted = this.completed;
+    if (!isCompleted) return 0;
+    else
+      return isAdmin
+        ? this.order_item.reduce((acc, cur) => cur.admin_revenue + acc, 0)
+        : this.order_item.reduce(
+            (acc, cur) => cur.ambassadsor_revenue + acc,
+            0,
+          );
   }
 }

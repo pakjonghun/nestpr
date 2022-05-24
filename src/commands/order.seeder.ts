@@ -13,7 +13,7 @@ async function bootstrap() {
 
   for (let i = 0; i < 31; i++) {
     const or = await order.save({
-      user_id: randomInt(44, 107),
+      user_id: randomInt(44, 100),
       code: faker.lorem.slug(2),
       email: faker.internet.email(),
       first_name: faker.name.firstName(),
@@ -22,6 +22,7 @@ async function bootstrap() {
       country: faker.address.country(),
       zip: faker.address.zipCode(),
       completed: true,
+      user: { id: 122 },
     });
 
     for (let j = 0; j < randomInt(2, 5); j++) {

@@ -1,5 +1,5 @@
-import { Link } from 'src/link/link';
-import { AbstractService } from 'src/share/abstract.service';
+import { Link } from '../link/link';
+import { AbstractService } from '../share/abstract.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

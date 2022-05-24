@@ -12,7 +12,6 @@ export class AuthGuard implements CanActivate {
       const jwt = request.cookies['jwt'];
 
       const { scope } = this.jwtService.verify(jwt);
-      console.log('guard', scope);
       const isAdmin = request.path.includes('admin');
       return (
         (isAdmin && scope == 'admin') || (!isAdmin && scope == 'ambassador')

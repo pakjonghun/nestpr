@@ -6,6 +6,7 @@ import { UserService } from './../user/user.service';
 import * as bcrypt from 'bcryptjs';
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Post,
@@ -13,6 +14,7 @@ import {
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
 import { Request, Response } from 'express';
@@ -29,7 +31,6 @@ export class AuthController {
 
   @Post(['admin/register', 'ambassador/register'])
   async register(@Req() req: Request, @Body() body: RegisterDto) {
-    console.log(req.path);
     const isAmbissador = req.path === '/api/ambassador/register';
     const hashedPassword = await bcrypt.hashSync(body.password, 10);
     return this.userService.save({
@@ -50,11 +51,13 @@ export class AuthController {
     return { message: 'success' };
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @Get(['admin/user', 'ambassador/user'])
   async user(@Req() req: Request) {
     const jwt = req.cookies['jwt'];
-    await this.jwtService.verifyAsync(jwt);
+    const a = await this.jwtService.verifyAsync(jwt);
+    console.log('jwt', a);
 
     const { id } = await this.jwtService.verifyAsync(jwt);
     return this.authService.user(id);

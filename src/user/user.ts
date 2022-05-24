@@ -1,13 +1,8 @@
-import { Exclude } from 'class-transformer';
+import { Order } from './../order/order';
+import { Expose } from 'class-transformer';
 import { IsBoolean, IsEmail, IsString, MinLength } from 'class-validator';
-import { Link } from 'src/link/link';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Link } from '../link/link';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -36,4 +31,17 @@ export class User {
 
   @OneToMany(() => Link, (link) => link.user)
   link: Link[];
+
+  @OneToMany(() => Order, (order) => order.user, {
+    createForeignKeyConstraints: false,
+  })
+  order: Order[];
+
+  @Expose()
+  get revenue() {
+    console.log('user reduce', this.order);
+    return this.order
+      .filter((v) => !!v.completed)
+      .reduce((acc, cur) => acc + cur.revenue, 0);
+  }
 }
