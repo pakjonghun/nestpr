@@ -1,3 +1,4 @@
+import { AuthGuard } from './../auth/auth.guard';
 import { UpdateProductDto } from './dtos/productUpdate.dto';
 import { RegisterProductDto } from './dtos/product.register.dto';
 import { ProductService } from './product.service';
@@ -9,6 +10,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 
 @Controller()
@@ -31,6 +33,7 @@ export class ProductController {
     return this.productService.findOne({ id });
   }
 
+  @UseGuards(AuthGuard)
   @Put('admin/product/:id')
   async update(@Param('id') id: number, @Body() body: UpdateProductDto) {
     await this.productService.update(id, body);
@@ -38,6 +41,7 @@ export class ProductController {
     return prodocut;
   }
 
+  @UseGuards(AuthGuard)
   @Delete('admin/product/:id')
   async delete(@Param('id') id: number) {
     await this.productService.delete(id);
