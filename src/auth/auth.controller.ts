@@ -27,13 +27,18 @@ export class AuthController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @Post('admin/register')
-  async register(@Body() body: RegisterDto) {
+  @Post(['admin/register', 'ambassador/register'])
+  async register(@Req() req: Request, @Body() body: RegisterDto) {
+    const isAmbissador = req.path === '/api/ambassador/register';
     const hashedPassword = await bcrypt.hashSync(body.password, 10);
-    return this.userService.save({ ...body, password: hashedPassword });
+    return this.userService.save({
+      ...body,
+      password: hashedPassword,
+      is_ambassador: isAmbissador,
+    });
   }
 
-  @Post('admin/login')
+  @Post(['admin/login', 'ambassador/login'])
   async login(
     @Res({ passthrough: true }) res: Response,
     @Body() body: LoginDto,
@@ -44,25 +49,24 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('admin/user')
+  @Get(['admin/user', 'ambassador/user'])
   async user(@Req() req: Request) {
     const jwt = req.cookies['jwt'];
-    const a = await this.jwtService.verifyAsync(jwt);
-    console.log('a', a);
+    await this.jwtService.verifyAsync(jwt);
+
     const { id } = await this.jwtService.verifyAsync(jwt);
-    console.log(id);
     return this.authService.user(id);
   }
 
   @UseGuards(AuthGuard)
-  @Post('admin/logout')
+  @Post(['admin/logout', 'ambassador/logout'])
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('jwt');
     return { message: 'success' };
   }
 
   @UseGuards(AuthGuard)
-  @Put('admin')
+  @Put(['admin', 'ambassador'])
   async update(@Req() req: Request, @Body() body: UpdateDto) {
     const jwt = req.cookies['jwt'];
     const { id } = await this.jwtService.verifyAsync(jwt);
@@ -70,7 +74,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Put('admin/password')
+  @Put(['admin/password', 'ambassador/password'])
   async updatePassword(@Req() req: Request, @Body() body: UpdatePasswordDto) {
     const jwt = req.cookies['jwt'];
     const { id } = await this.jwtService.verifyAsync(jwt);

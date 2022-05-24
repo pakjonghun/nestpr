@@ -62,12 +62,12 @@ export class Order {
   @JoinColumn({ name: 'order_id' })
   order_item: OrderItem[];
 
-  @ManyToOne(() => Link, (link) => link.orders)
-  @JoinColumn({
-    name: 'code',
-    referencedColumnName: 'code',
-  })
-  link: Link;
+  // @ManyToOne(() => Link, (link) => link.orders)
+  // @JoinColumn({
+  //   name: 'code',
+  //   referencedColumnName: 'code',
+  // })
+  // link: Link;
 
   @Expose()
   get name() {
