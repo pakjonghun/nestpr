@@ -20,4 +20,8 @@ export abstract class AbstractService {
   async update(id: number, options) {
     await this.repo.save({ id, ...options });
   }
+
+  async delete(id: number) {
+    await this.repo.delete(id);
+  }
 }
