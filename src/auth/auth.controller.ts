@@ -9,10 +9,12 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
 import { Request, Response } from 'express';
+import { AuthGuard } from './auth.guard';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -37,6 +39,7 @@ export class AuthController {
     return this.userService.save(body);
   }
 
+  @UseGuards(AuthGuard)
   @Get('admin/user')
   async user(@Req() req: Request) {
     const jwt = req.cookies['jwt'];
