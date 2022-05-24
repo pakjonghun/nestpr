@@ -1,6 +1,6 @@
 import { Product } from './product';
 import { Repository } from 'typeorm';
-import { AbstractService } from 'src/share/abstract.service';
+import { AbstractService } from '../share/abstract.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
