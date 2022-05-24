@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity('order')
 export class Order {
@@ -28,10 +29,12 @@ export class Order {
   @IsEmpty({ message: '이메일 형식을 지켜야 합니다.' })
   email: string;
 
+  @Exclude()
   @Column()
   @IsString({ message: '이름은 문자열입니다.' })
   first_name: string;
 
+  @Exclude()
   @Column()
   @IsString({ message: '이름은 문자열 입니다.' })
   last_name: string;
@@ -48,6 +51,7 @@ export class Order {
   @IsString({ message: 'Zip 은 문자열 이어야 합니다.' })
   zip: string;
 
+  @Exclude()
   @Column({ default: false })
   @IsBoolean({ message: 'completed 는 블리언 입니다.' })
   completed: boolean;
@@ -55,4 +59,9 @@ export class Order {
   @OneToMany(() => OrderItem, (item) => item.order)
   @JoinColumn({ name: 'order_id' })
   order_item: OrderItem[];
+
+  @Expose()
+  get name() {
+    return this.first_name + ' ' + this.last_name;
+  }
 }

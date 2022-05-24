@@ -4,6 +4,7 @@ import { CreateOrderDto } from './dtos/orders.dto';
 import { OrderService } from './order.service';
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,14 +12,16 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 
 @Controller()
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('admin/order')
   async all() {
-    return this.orderService.find({});
+    return this.orderService.find({ relations: ['order_item'] });
   }
 
   @Get('admin/order/:id')
