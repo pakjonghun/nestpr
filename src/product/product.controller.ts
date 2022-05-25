@@ -15,11 +15,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { title } from 'process';
 
 @Controller()
 export class ProductController {
@@ -73,11 +75,21 @@ export class ProductController {
   }
 
   @Get('ambassador/product/backend')
-  async backend() {
-    let value = await this.cacheManager.get('backend_product');
+  async backend(@Query() query: string) {
+    let value = (await this.cacheManager.get('backend_product')) as any[];
     if (!value) {
       value = await this.productService.find();
       this.cacheManager.set('backend_product', value, { ttl: 30 * 60 });
+    }
+
+    if (Object.keys(query).length) {
+      Object.keys(query).forEach((key) => {
+        const qu = query[key].toLowerCase();
+        console.log(qu, key);
+        value = value.filter((v) => {
+          return v[key].toLowerCase().includes(qu);
+        });
+      });
     }
 
     return value;
