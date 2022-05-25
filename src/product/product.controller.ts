@@ -82,9 +82,14 @@ export class ProductController {
       this.cacheManager.set('backend_product', value, { ttl: 30 * 60 });
     }
 
+    const perPage = (query['perPage'] as number) || 9;
+    const page = (query['page'] as number) || 1;
+    const totalPage = Math.ceil(value.length / perPage);
+    const total = value.length;
+
     if (Object.keys(query).length) {
       Object.keys(query).forEach((key) => {
-        if (key !== 'sort') {
+        if (key !== 'sort' && key !== 'page' && key !== 'perPage') {
           const qu = query[key].toLowerCase();
           value = value.filter((v) => {
             return v[key].toLowerCase().includes(qu);
@@ -100,9 +105,17 @@ export class ProductController {
             value = value.sort((a, b) => b.price - a.price);
           }
         }
+
+        if (key === 'page') {
+          value = value.slice((page - 1) * perPage, page * perPage);
+        }
       });
     }
 
-    return value;
+    return {
+      data: value,
+      totalPage,
+      total,
+    };
   }
 }
