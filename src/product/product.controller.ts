@@ -19,12 +19,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller()
 export class ProductController {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly productService: ProductService,
+    private readonly eventEmmiter: EventEmitter2,
   ) {}
 
   @Get('admin/product')
@@ -35,7 +37,9 @@ export class ProductController {
   @Post('admin/product')
   async register(@Body() body: RegisterProductDto) {
     const product = await this.productService.save(body);
-    return this.productService.findOne({ id: product['id'] });
+    const p = await this.productService.findOne({ id: product['id'] });
+    this.eventEmmiter.emit('product.create');
+    return p;
   }
 
   @Get('admin/product/:id')
@@ -48,6 +52,7 @@ export class ProductController {
   async update(@Param('id') id: number, @Body() body: UpdateProductDto) {
     await this.productService.update(id, body);
     const prodocut = await this.productService.findOne({ id });
+    this.eventEmmiter.emit('product.create');
     return prodocut;
   }
 
@@ -55,10 +60,11 @@ export class ProductController {
   @Delete('admin/product/:id')
   async delete(@Param('id') id: number) {
     await this.productService.delete(id);
+    this.eventEmmiter.emit('product.create');
     return { message: 'success' };
   }
 
-  @CacheKey('frontend_product1')
+  @CacheKey('frontend_product')
   @CacheTTL(30 * 60)
   @UseInterceptors(CacheInterceptor)
   @Get('ambassador/product/frontend')
