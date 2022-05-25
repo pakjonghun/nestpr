@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
+@UseGuards(AuthGuard)
 @Controller()
 export class LinkController {
   constructor(
@@ -26,7 +27,6 @@ export class LinkController {
     return this.linkService.find({ user: { id } });
   }
 
-  @UseGuards(AuthGuard)
   @Post('ambassador/link')
   async create(@Req() req: Request, @Body('products') products: number[]) {
     const jwt = req.cookies['jwt'];
@@ -43,7 +43,6 @@ export class LinkController {
     return this.linkService.findOne({ id: link['id'] });
   }
 
-  @UseGuards(AuthGuard)
   @Get('ambassador/stats')
   async stats(@Req() req: Request) {
     const jwt = req.cookies['jwt'];

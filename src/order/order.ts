@@ -66,6 +66,10 @@ export class Order {
   @ManyToOne(() => User, (user) => user.order, {
     createForeignKeyConstraints: false,
   })
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
   user: User;
 
   @ManyToOne(() => Link, (link) => link.order, {
@@ -90,7 +94,6 @@ export class Order {
   @Expose()
   get revenue() {
     const isAdmin = !this.user.is_ambassador;
-    console.log('order', this.user);
     const isCompleted = this.completed;
     if (!isCompleted) return 0;
     else

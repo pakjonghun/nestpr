@@ -38,8 +38,12 @@ export class User {
   order: Order[];
 
   @Expose()
+  get name() {
+    return this.first_name + ' ' + this.last_name;
+  }
+
+  @Expose()
   get revenue() {
-    console.log('user reduce', this.order);
     return this.order
       .filter((v) => !!v.completed)
       .reduce((acc, cur) => acc + cur.revenue, 0);

@@ -9,4 +9,17 @@ export class UserController {
   async getAmbassadors() {
     this.userService.find({ is_ambassador: true });
   }
+
+  @Get('ambassador/ranking')
+  async rank() {
+    const user = await this.userService.find({
+      is_ambassador: true,
+      relations: ['order', 'order.order_item', 'order.user'],
+    });
+
+    return user.map((u) => ({
+      name: u['name'],
+      revenue: u['revenue'],
+    }));
+  }
 }

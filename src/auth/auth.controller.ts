@@ -57,7 +57,6 @@ export class AuthController {
   async user(@Req() req: Request) {
     const jwt = req.cookies['jwt'];
     const a = await this.jwtService.verifyAsync(jwt);
-    console.log('jwt', a);
 
     const { id } = await this.jwtService.verifyAsync(jwt);
     return this.authService.user(id);
