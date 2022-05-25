@@ -4,18 +4,28 @@ import { RegisterProductDto } from './dtos/product.register.dto';
 import { ProductService } from './product.service';
 import {
   Body,
+  CacheInterceptor,
+  CacheKey,
+  CacheTTL,
+  CACHE_MANAGER,
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { Cache } from 'cache-manager';
 
 @Controller()
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly productService: ProductService,
+  ) {}
 
   @Get('admin/product')
   async all() {
@@ -46,5 +56,24 @@ export class ProductController {
   async delete(@Param('id') id: number) {
     await this.productService.delete(id);
     return { message: 'success' };
+  }
+
+  @CacheKey('frontend_product1')
+  @CacheTTL(30 * 60)
+  @UseInterceptors(CacheInterceptor)
+  @Get('ambassador/product/frontend')
+  async frontend() {
+    return this.productService.find();
+  }
+
+  @Get('ambassador/product/backend')
+  async backend() {
+    let value = await this.cacheManager.get('backend_product');
+    if (!value) {
+      value = await this.productService.find();
+      this.cacheManager.set('backend_product', value, { ttl: 30 * 60 });
+    }
+
+    return value;
   }
 }
