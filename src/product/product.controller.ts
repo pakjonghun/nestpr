@@ -84,11 +84,22 @@ export class ProductController {
 
     if (Object.keys(query).length) {
       Object.keys(query).forEach((key) => {
-        const qu = query[key].toLowerCase();
-        console.log(qu, key);
-        value = value.filter((v) => {
-          return v[key].toLowerCase().includes(qu);
-        });
+        if (key !== 'sort') {
+          const qu = query[key].toLowerCase();
+          value = value.filter((v) => {
+            return v[key].toLowerCase().includes(qu);
+          });
+        }
+
+        if (key === 'sort') {
+          if (query['sort'] == 'asc') {
+            value = value.sort((a, b) => a.price - b.price);
+          }
+
+          if (query['sort'] == 'desc') {
+            value = value.sort((a, b) => b.price - a.price);
+          }
+        }
       });
     }
 
