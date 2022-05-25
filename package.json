@@ -21,7 +21,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seeder:am": "ts-node src/commands/seeder.ts",
     "seeder:pro": "ts-node src/commands/product.seeder.ts",
-    "seeder:or": "ts-node src/commands/order.seeder.ts"
+    "seeder:or": "ts-node src/commands/order.seeder.ts",
+    "seeder:re": "ts-node src/commands/ranking.seeder.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -41,7 +42,7 @@
     "faker": "^5.5.3",
     "mysql2": "^2.3.3",
     "passport-jwt": "^4.0.0",
-    "redis": "^4.1.0",
+    "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",

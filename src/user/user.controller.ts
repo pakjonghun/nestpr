@@ -1,9 +1,14 @@
+import { RedisService } from './../share/redis.service';
 import { UserService } from './user.service';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly redisService: RedisService,
+  ) {}
 
   @Get('ambassadors')
   async getAmbassadors() {
@@ -11,15 +16,16 @@ export class UserController {
   }
 
   @Get('ambassador/ranking')
-  async rank() {
-    const user = await this.userService.find({
-      is_ambassador: true,
-      relations: ['order', 'order.order_item', 'order.user'],
-    });
-
-    return user.map((u) => ({
-      name: u['name'],
-      revenue: u['revenue'],
-    }));
+  async rank(@Res() res: Response) {
+    const client = this.redisService.getClient();
+    client.ZREVRANGEBYSCORE(
+      'ranking',
+      '+inf',
+      '-inf',
+      'withscores',
+      (err, result) => {
+        res.send(result);
+      },
+    );
   }
 }

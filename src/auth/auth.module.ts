@@ -4,7 +4,7 @@ import { UserModule } from './../user/user.module';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { User } from 'src/user/user';
+import { User } from '../user/user';
 
 @Module({
   imports: [UserModule, ShareModule, TypeOrmModule.forFeature([User])],
