@@ -1,3 +1,4 @@
+import { Link } from './../link/link';
 import { User } from '../user/user';
 import { OrderItem } from './orderItem';
 import { IsBoolean, IsEmpty, IsOptional, IsString } from 'class-validator';
@@ -67,12 +68,14 @@ export class Order {
   })
   user: User;
 
-  // @ManyToOne(() => Link, (link) => link.orders)
-  // @JoinColumn({
-  //   name: 'code',
-  //   referencedColumnName: 'code',
-  // })
-  // link: Link;
+  @ManyToOne(() => Link, (link) => link.order, {
+    createForeignKeyConstraints: false,
+  })
+  @JoinColumn({
+    referencedColumnName: 'code',
+    name: 'code',
+  })
+  link: Link;
 
   @Expose()
   get name() {

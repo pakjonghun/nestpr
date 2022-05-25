@@ -42,4 +42,30 @@ export class LinkController {
 
     return this.linkService.findOne({ id: link['id'] });
   }
+
+  @UseGuards(AuthGuard)
+  @Get('ambassador/stats')
+  async stats(@Req() req: Request) {
+    const jwt = req.cookies['jwt'];
+    const { id } = await this.jwtService.verifyAsync(jwt);
+
+    const user = await this.authService.user(id);
+
+    const link = await this.linkService.find({
+      user,
+      relations: ['order'],
+    });
+
+    const data = link.map((v) => {
+      const order = v['order'].filter((v) => v['completed']);
+      const revenue = v['order'].reduce((acc, cur) => cur['revenue'], 0);
+      return {
+        code: v['code'],
+        count: order.length,
+        revenue,
+      };
+    });
+
+    return data;
+  }
 }
